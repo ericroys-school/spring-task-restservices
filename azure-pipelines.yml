@@ -1,0 +1,67 @@
+## Pipeline for deployment of Tasking Restful Service to Kubernetes Cluster
+
+## trigger on commit to master branch
+trigger:
+- master
+
+## use ubuntu as build host
+pool:
+   vmImage: ubuntu-latest
+steps:
+
+## Build the code
+-  task: Maven@3
+   inputs:
+      goals: package
+      mavenPomFile: pom.xml
+      publishJUnitResults: false
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
+
+## Copy build artifact to place where docker can find it      
+-  task: Bash@3
+   inputs:
+      targetType: inline
+      script: |
+         echo $(ls /home/vsts/work/1/s/)
+         #cp build artificat into directory where can be used by Dockerfile
+         cp /home/vsts/work/1/s/target/widgets.jar /home/vsts/work/1/s/tasking.jar
+         echo $(ls /home/vsts/work/1/s/)
+
+## Build and push docker image     
+-  task: Docker@2
+   inputs:
+      containerRegistry: showmeregistry
+      repository: widgets
+      command: buildAndPush
+      Dockerfile: '**/Dockerfile'
+      addPipelineData: false
+      ##use build id for tag
+      #tags: $(Build.BuildId)
+      ## tag as latest
+      tags: 'latest'
+
+## Deploy pod(s) to kube cluster
+## Note: Default creates to namespace decided by
+##   the connection established by azdev to the cluster.
+##   If required to create in different namespace then
+##   need to first grant access to namespace (see below for example)
+- task: KubernetesManifest@0
+  inputs:
+    action: 'deploy'
+    #namespace: 'development'
+    kubernetesServiceConnection: 'a cluster: e.g. edr-cluster-edrtest'
+    manifests: 'manifests/deploy.yaml'
+    ## use build id
+    ## use latest
+    containers: 'container from registry: e.g.a showmeregistry.azurecr.io/widgets:latest'
+
+## Create service in kube cluster
+- task: KubernetesManifest@0
+  inputs:
+    action: 'deploy'
+    #namespace: 'development'
+    kubernetesServiceConnection: 'a service connection: e.g. edr-cluster-edrtest'
+    manifests: 'manifests/service.yaml'
+

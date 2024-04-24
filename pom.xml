@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.edrpublic</groupId>
+  <artifactId>WS-Tasks</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Tasks Restful Api</name>
+  <properties>
+	<java.version>21</java.version>
+	<maven-jaxb2-plugin.version>0.13.2</maven-jaxb2-plugin.version>
+	<!-- un comment to not run tests
+	<maven.test.skip>true</maven.test.skip> 
+	-->
+  </properties>
+  <parent>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>3.2.5</version>
+	<relativePath/> <!-- lookup parent from repository -->
+</parent>
+  <dependencies>
+	<dependency>
+		<groupId>org.springdoc</groupId>
+		<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		<version>2.5.0</version>
+	</dependency>	
+	<!-- <dependency>
+		<groupId>jakarta.validation</groupId>
+		<artifactId>jakarta.validation-api</artifactId>
+		<version>3.0.2</version>
+	</dependency> -->
+	<!-- <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-security</artifactId>
+	</dependency> -->
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-test</artifactId>
+		<scope>test</scope>
+	</dependency>
+	<!-- <dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-test</artifactId>
+		<scope>test</scope>
+	</dependency>		 -->
+</dependencies>
+<build>
+	<finalName>tasking</finalName>
+	<plugins>
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+		</plugin>
+	</plugins>
+</build>
+</project>
